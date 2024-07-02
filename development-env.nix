@@ -10,6 +10,10 @@
     KUBE_EDITOR = "nano";
   };
 
+  programs.bash.shellAliases = {
+    k = "kubectl";
+  };
+
   networking.extraHosts = 
   ''
     192.168.49.2 test-ingress.org
