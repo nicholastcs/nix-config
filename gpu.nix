@@ -5,6 +5,26 @@
 
   services.xserver.videoDrivers = [ "nvidia" ];
 
+  # boot.extraModprobeConfig = ''
+  #   options nvidia_drm modeset=1
+  #   options nvidia_drm fbdev=1
+  # '';
+
+  boot.kernelParams = [
+    "nvidia-drm.fbdev=1"
+    "initcall_blacklist=simpledrm_platform_driver_init"
+  ];
+
+  environment.variables = {
+    # Required to run the correct GBM backend for nvidia GPUs on wayland
+    GBM_BACKEND = "nvidia-drm";
+    # Apparently, without this nouveau may attempt to be used instead
+    # (despite it being blacklisted)
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    # Hardware cursors are currently broken on nvidia
+    WLR_NO_HARDWARE_CURSORS = "1";
+  };
+
   # Prevents immediate wake up upon suspending.
   services.udev.extraRules = (builtins.readFile ./udev.rules);
 
@@ -12,7 +32,7 @@
     enable = true;
     driSupport = true;
     driSupport32Bit=true;
-    extraPackages = with pkgs;[ vaapiVdpau nvidia-vaapi-driver intel-media-driver]; 
+    extraPackages = with pkgs;[ vaapiVdpau nvidia-vaapi-driver intel-media-driver];
   };
 
   hardware.nvidia = {
@@ -44,6 +64,14 @@
     nvidiaSettings = true;
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.production;
+    # package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+      version = "555.58";
+      sha256_64bit = "sha256-bXvcXkg2kQZuCNKRZM5QoTaTjF4l2TtrsKUvyicj5ew=";
+      sha256_aarch64 = "sha256-7XswQwW1iFP4ji5mbRQ6PVEhD4SGWpjUJe1o8zoXYRE=";
+      openSha256 = "sha256-hEAmFISMuXm8tbsrB+WiUcEFuSGRNZ37aKWvf0WJ2/c=";
+      settingsSha256 = "sha256-vWnrXlBCb3K5uVkDFmJDVq51wrCoqgPF03lSjZOuU8M=";
+      persistencedSha256 = "sha256-lyYxDuGDTMdGxX3CaiWUh1IQuQlkI2hPEs5LI20vEVw=";
+    };
   };
 }

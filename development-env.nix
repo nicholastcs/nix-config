@@ -14,7 +14,7 @@
     k = "kubectl";
   };
 
-  networking.extraHosts = 
+  networking.extraHosts =
   ''
     192.168.49.2 test-ingress.org
   '';
@@ -28,8 +28,9 @@
     minikube
     kubectl
     kubernetes-helm
+    open-policy-agent
     mkcert
-
+    
     (vscode-with-extensions.override {
       vscodeExtensions = with vscode-extensions; [
         bbenoist.nix
@@ -38,6 +39,7 @@
         pkief.material-icon-theme
         redhat.vscode-yaml
         ms-kubernetes-tools.vscode-kubernetes-tools
+        vscode-extensions.tsandall.opa
       ];
     })
 
