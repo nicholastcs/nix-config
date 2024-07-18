@@ -6,7 +6,7 @@
       <home-manager/nixos>
       ./hardware-configuration.nix
       ./gpu.nix
-      ./home-manager/users/nicholastcs.nix
+      ./home-manager/users/work.nix
     ];
 
   # Bootloader.

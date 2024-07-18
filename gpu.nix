@@ -1,17 +1,17 @@
 { config, lib, pkgs, ... }:
 
 {
-  boot.blacklistedKernelModules =  [ "nouveau" ];
+  boot.blacklistedKernelModules =  [ "nouveau" "nvidiafb" ];
 
   services.xserver.videoDrivers = [ "nvidia" ];
 
   boot.extraModprobeConfig = ''
     options nvidia_drm modeset=1
     options nvidia_drm fbdev=1
-    options NVreg_PreserveVideoMemoryAllocations=1
+    options nvidia NVreg_TemporaryFilePath=/var/tmp
   '';
 
-  boot.kernelParams = [
+  boot.kernelParams = [ 
     "nvidia-drm.fbdev=1"
     "initcall_blacklist=simpledrm_platform_driver_init"
   ];
