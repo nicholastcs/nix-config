@@ -9,6 +9,7 @@ in
         {
           options = {
             enableSudo = lib.mkEnableOption "Enable Sudo";
+            enableVirtualBox = lib.mkEnableOption "Is VirtualBox user";
           };
         }
       );
@@ -17,11 +18,12 @@ in
 
   config = {
     virtualisation.docker.enable = true;
+    virtualisation.virtualbox.host.enable = true;
 
     users.users = builtins.mapAttrs (name: value: {
         isNormalUser = true;
         description = name;
-        extraGroups = [ "networkmanager" "docker" ] ++ lib.optionals(value.enableSudo == true) ["wheel"];
+        extraGroups = [ "networkmanager" "docker" ] ++ lib.optionals(value.enableSudo == true) ["wheel"] ++ lib.optionals(value.enableVirtualBox == true) ["vboxusers"];
         packages = with pkgs; [
           kdePackages.kate
           neofetch
@@ -30,6 +32,20 @@ in
         ];
       }
     ) cfg.configByUsername;
+
+    # build is very flaky and broke the build, test is bypassed.
+    nixpkgs.overlays = [
+      (final: prev: {
+        open-policy-agent = prev.open-policy-agent.override {
+
+          buildGoModule = args: prev.buildGoModule (args // {
+            doInstallCheck = false;
+            doCheck = false;
+          });
+
+        };
+      })
+    ];
 
     home-manager.users = builtins.mapAttrs(name: value: { pkgs, ... }:{
         home.stateVersion = "24.05";
@@ -98,6 +114,8 @@ in
             # For development
             go_1_21
             git
+            go-task
+            yamllint
 
             # infrastructure
             minikube

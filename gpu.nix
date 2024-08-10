@@ -1,20 +1,20 @@
 { config, lib, pkgs, ... }:
 
 {
-  boot.blacklistedKernelModules =  [ "nouveau" "nvidiafb" ];
+#  boot.blacklistedKernelModules =  [ "nouveau" "nvidiafb" ];
 
   services.xserver.videoDrivers = [ "nvidia" ];
 
-  boot.extraModprobeConfig = ''
-    options nvidia_drm modeset=1
-    options nvidia_drm fbdev=1
-    options nvidia NVreg_TemporaryFilePath=/var/tmp
-  '';
+#  boot.extraModprobeConfig = ''
+#    options nvidia_drm modeset=1
+#    options nvidia_drm fbdev=1
+#    options nvidia NVreg_TemporaryFilePath=/var/tmp
+#  '';
 
-  boot.kernelParams = [ 
-    "nvidia-drm.fbdev=1"
-    "initcall_blacklist=simpledrm_platform_driver_init"
-  ];
+#  boot.kernelParams = [ 
+#    "nvidia-drm.fbdev=1"
+#    "initcall_blacklist=simpledrm_platform_driver_init"
+#  ];
 
   environment.variables = {
     # Necessary to correctly enable va-api (video codec hardware
@@ -81,14 +81,14 @@
     nvidiaSettings = true;
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    # package = config.boot.kernelPackages.nvidiaPackages.stable;
-    package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-      version = "555.58";
-      sha256_64bit = "sha256-bXvcXkg2kQZuCNKRZM5QoTaTjF4l2TtrsKUvyicj5ew=";
-      sha256_aarch64 = "sha256-7XswQwW1iFP4ji5mbRQ6PVEhD4SGWpjUJe1o8zoXYRE=";
-      openSha256 = "sha256-hEAmFISMuXm8tbsrB+WiUcEFuSGRNZ37aKWvf0WJ2/c=";
-      settingsSha256 = "sha256-vWnrXlBCb3K5uVkDFmJDVq51wrCoqgPF03lSjZOuU8M=";
-      persistencedSha256 = "sha256-lyYxDuGDTMdGxX3CaiWUh1IQuQlkI2hPEs5LI20vEVw=";
-    };
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+ #   package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+ #     version = "555.58";
+ #     sha256_64bit = "sha256-bXvcXkg2kQZuCNKRZM5QoTaTjF4l2TtrsKUvyicj5ew=";
+ #     sha256_aarch64 = "sha256-7XswQwW1iFP4ji5mbRQ6PVEhD4SGWpjUJe1o8zoXYRE=";
+ #     openSha256 = "sha256-hEAmFISMuXm8tbsrB+WiUcEFuSGRNZ37aKWvf0WJ2/c=";
+ #     settingsSha256 = "sha256-vWnrXlBCb3K5uVkDFmJDVq51wrCoqgPF03lSjZOuU8M=";
+ #     persistencedSha256 = "sha256-lyYxDuGDTMdGxX3CaiWUh1IQuQlkI2hPEs5LI20vEVw=";
+ #   };
   };
 }

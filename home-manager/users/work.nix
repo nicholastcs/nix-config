@@ -8,6 +8,7 @@
   userModule.configByUsername = {
     "nicholastcs" = {
       enableSudo = true;
+      enableVirtualBox = true;
     };
     "work" = {
       enableSudo = false;
